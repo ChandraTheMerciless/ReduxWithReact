@@ -1,14 +1,13 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
-import pluginReactConfig from "eslint-plugin-react/configs/recommended.js";
-import { fixupConfigRules } from "@eslint/compat";
-
+import pluginReact from "eslint-plugin-react";
+import pluginReactHooks from "eslint-plugin-react-hooks";
+import pluginPrettier from "eslint-plugin-prettier";
 import eslintRecommended from 'eslint/conf/eslint-recommended';
 import pluginReactRecommended from 'eslint-plugin-react/configs/recommended';
 import pluginReactHooksRecommended from 'eslint-plugin-react-hooks/config';
 import pluginPrettierRecommended from 'eslint-plugin-prettier/config';
 import prettierConfig from 'eslint-config-prettier';
-
 
 export default [
   {
@@ -17,31 +16,26 @@ export default [
       'react-app/jest',
       'airbnb-typescript',
       'plugin:@typescript-eslint/recommended',
-      'prettier/react',
-      'prettier/@typescript-eslint',
-      'plugin:prettier/recommended'
-  ],
+      'plugin:prettier/recommended',
+      'prettier',
+    ],
     languageOptions: { 
       globals: globals.browser,
       ecmaVersion: 2021,
-
+      sourceType: "module",
     },
-    ...eslintRecommended,
-    ...pluginReactRecommended,
-    ...pluginReactHooksRecommended,
-    ...pluginPrettierRecommended,
-    ...prettierConfig,
     parserOptions: {
       ecmaVersion: 12,
       sourceType: "module",
       ecmaFeatures: {
-        jsx: true
-      }
+        jsx: true,
+      },
     },
-    plugins: {
-      "react": pluginReactConfig.plugins.react,
-      "react-hooks": pluginReactConfig.plugins["react-hooks"],
-    },
+    plugins: [
+      "react",
+      "react-hooks",
+      "prettier",
+    ],
     overrides: [
       {
         files: ["**/*.{js,jsx,ts,tsx}"],
@@ -49,10 +43,13 @@ export default [
       },
     ],
     rules: {
+      ...eslintRecommended.rules,
+      ...pluginReactRecommended.rules,
+      ...pluginReactHooksRecommended.rules,
+      ...pluginPrettierRecommended.rules,
+      ...prettierConfig.rules,
       "react/react-in-jsx-scope": "off",
-      "no-unused-vars": ["warn", 
-        { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
-      ],
+      "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
       "prefer-const": ["error", { "ignoreReadBeforeAssign": true }],
       "no-unused-expressions": "error",
       "react/prefer-stateless-function": "error",
@@ -65,25 +62,11 @@ export default [
       "react/no-danger-with-children": "error",
       "react/no-unstable-nested-components": ["error", { allowAsProps: true }],
       "react/jsx-fragments": "error",
-      "react/destructuring-assignment": [
-        "error",
-        "always",
-        { destructureInSignature: "always" },
-      ],
+      "react/destructuring-assignment": ["error", "always", { destructureInSignature: "always" }],
       "react/jsx-no-leaked-render": ["error", { validStrategies: ["ternary"] }],
       "react/jsx-max-depth": ["error", { max: 5 }],
-      "react/function-component-definition": [
-        "warn",
-        { namedComponents: "arrow-function" },
-      ],
-      "react/jsx-key": [
-        "error",
-        {
-          checkFragmentShorthand: true,
-          checkKeyMustBeforeSpread: true,
-          warnOnDuplicates: true,
-        },
-      ],
+      "react/function-component-definition": ["warn", { namedComponents: "arrow-function" }],
+      "react/jsx-key": ["error", { checkFragmentShorthand: true, checkKeyMustBeforeSpread: true, warnOnDuplicates: true }],
       "react/jsx-no-useless-fragment": "warn",
       "react/jsx-curly-brace-presence": "warn",
       "react/no-typos": "warn",
@@ -94,8 +77,7 @@ export default [
       "react/jsx-one-expression-per-line": "off",
       "react/prop-types": "off",
       "react/jsx-props-no-multi-spaces": "off",
-    }
+    },
   },
   pluginJs.configs.recommended,
-  ...fixupConfigRules(pluginReactConfig),
 ];
