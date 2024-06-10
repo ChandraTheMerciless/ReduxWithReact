@@ -12,6 +12,15 @@ import prettierConfig from 'eslint-config-prettier';
 
 export default [
   {
+    extends: [
+      'react-app',
+      'react-app/jest',
+      'airbnb-typescript',
+      'plugin:@typescript-eslint/recommended',
+      'prettier/react',
+      'prettier/@typescript-eslint',
+      'plugin:prettier/recommended'
+  ],
     languageOptions: { 
       globals: globals.browser,
       ecmaVersion: 2021,
@@ -33,6 +42,12 @@ export default [
       "react": pluginReactConfig.plugins.react,
       "react-hooks": pluginReactConfig.plugins["react-hooks"],
     },
+    overrides: [
+      {
+        files: ["**/*.{js,jsx,ts,tsx}"],
+        excludedFiles: "node_modules/**",
+      },
+    ],
     rules: {
       "react/react-in-jsx-scope": "off",
       "no-unused-vars": ["warn", 
