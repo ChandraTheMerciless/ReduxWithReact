@@ -7,13 +7,11 @@ import Products from './components/Shop/Products';
 function App() {
   const showCart = useSelector((state) => state.showCart.showCart);
 
-  return (
-    
+  return (    
     <Layout>
-      {showCart ?? <Cart />}
+      {showCart && <Cart />}
       <Products />
     </Layout>
-  
 );
 }
 
