@@ -1,27 +1,39 @@
 import { useEffect } from'react';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
+import Notification from './components/UI/Notification';
 import Cart from './components/Cart/Cart';
 import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
+import { sendCartData } from './store/cartItems';
+
+let isInitial = true
 
 function App() {
+  const dispatch = useDispatch();
   const showCart = useSelector((state) => state.showCart.showCart);
   const cartItems = useSelector((state) => state.cartItems.cartItems);
+  const notification = useSelector((state) => state.showCart.notification);
 
   useEffect(() => {
-    fetch('https://react-redux-dummy-440bc-default-rtdb.firebaseio.com/.json', {
-      method: 'PUT',
-      body: JSON.stringify(cartItems),
-    })
-  }, [cartItems])
+    if (isInitial) {
+      isInitial = false;
+      return;
+    }
 
-  return (    
-    <Layout>
-      {showCart && <Cart />}
-      <Products />
-    </Layout>
+    dispatch(sendCartData(cartItems));
+  }, [cartItems, dispatch])
+  console.log({notification})
+
+  return (
+    <>
+      <Layout>
+        {notification && <Notification status={notification.status} title={notification.title} message={notification.message} /> }
+        {showCart && <Cart />}
+        <Products />
+      </Layout>
+    </>
 );
 }
 
