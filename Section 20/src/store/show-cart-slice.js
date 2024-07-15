@@ -8,7 +8,6 @@ const showCartSlice = createSlice({
             state.showCart = !state.showCart;
         },
         showNotification(state, action) {
-            console.log({action})
             state.notification = {
                 status: action.payload.status,
                 title: action.payload.title,
