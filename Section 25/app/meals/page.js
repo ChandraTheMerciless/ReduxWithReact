@@ -1,14 +1,22 @@
+import { Suspense } from 'react';
+
 import Link from 'next/link';
 
 import classes from './page.module.css';
 import MealsGrid from '@/components/meals/meals-grid';
 import { getMeals } from '@/lib/meals';
 
-// can't normally turn component into async, but we can in next server components
-export default async function MealsPage() {
+async function Meals() {
     // not safe to do in vanilla React, but this is safe here because we're in a server component
     const meals = await getMeals();
 
+    return (
+        <MealsGrid meals={meals} />
+    );
+}
+
+// can't normally turn component into async, but we can in next server components
+export default function MealsPage() {
     return (
         <>
             <header className={classes.header}>
@@ -21,7 +29,10 @@ export default async function MealsPage() {
                 </p>
             </header>
             <main className={classes.main}>
-                <MealsGrid meals={meals} />
+                {/* Suspense is default to react, and lets us handle loading states and show fallback content until resource loads */}
+                <Suspense fallback={<p className={classes.loading}>Loading meals...</p>}>
+                    <Meals />
+                </Suspense>
             </main>
         </>
     )
